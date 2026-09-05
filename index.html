@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
 
     <style>
-        /* CSS TETAP SAMA SEPERTI SEBELUMNYA */
         :root {
             --primary-blue: #84D3FA;
             --text-blue: #64B5F6;
@@ -60,7 +59,11 @@
         }
 
         .top-section { display: flex; flex-direction: column; align-items: center; }
-        .image-placeholder { width: 100%; aspect-ratio: 16 / 9; background-color: #D9D9D9; border-radius: 12px; box-shadow: var(--box-shadow); }
+        
+        /* CSS yang diupdate untuk Video */
+        .image-placeholder { width: 100%; aspect-ratio: 16 / 9; background-color: #D9D9D9; border-radius: 12px; box-shadow: var(--box-shadow); overflow: hidden; display: flex; }
+        .image-placeholder video { width: 100%; height: 100%; object-fit: cover; }
+        
         .vtuber-name-box { background-color: var(--bg-white); color: var(--text-blue); width: 90%; text-align: center; padding: 15px; border-radius: 15px; font-size: 2rem; font-weight: 700; text-transform: uppercase; box-shadow: var(--box-shadow); margin-top: -20px; z-index: 2; }
         .bottom-section { background-color: var(--bg-white); border-radius: 20px; padding: 25px; box-shadow: var(--box-shadow); display: flex; flex-direction: column; gap: 15px; }
         .info-row { display: flex; border-radius: 10px; overflow: hidden; border: 2px solid var(--primary-blue); }
@@ -90,7 +93,13 @@
     <div id="invitation-content" class="invitation-container">
         
         <div class="top-section">
-            <div class="image-placeholder"></div>
+            <div class="image-placeholder">
+                <!-- LINK VIDEO DIMASUKKAN DI SINI -->
+                <video id="display-video" controls autoplay muted loop>
+                    <source src="assets/video-kamu.mp4" type="video/mp4">
+                    Browser Anda tidak mendukung pemutar video.
+                </video>
+            </div>
             <div class="vtuber-name-box" id="display-name">NAMA</div>
         </div>
 
@@ -123,39 +132,30 @@
 
     </div>
 
-    <!-- SCRIPT JAVASCRIPT UNTUK DATABASE STATIS -->
-   <!-- PANGGIL FILE DATABASE DI SINI -->
+    <!-- PANGGIL FILE DATABASE DI SINI -->
     <script src="database.js"></script>
 
-    <!-- SCRIPT JAVASCRIPT UNTUK LOGIKA (Tidak diubah) -->
+    <!-- SCRIPT JAVASCRIPT UNTUK LOGIKA -->
     <script>
-        // 2. MENGAMBIL PARAMETER DARI URL (contoh: ?invite=asep)
         const urlParams = new URLSearchParams(window.location.search);
-        // Ubah huruf jadi kecil semua (lowercase) agar tidak case-sensitive
         const inviteTarget = urlParams.get('invite') ? urlParams.get('invite').toLowerCase() : null;
 
-        // 3. LOGIKA PENAMPILAN DATA
         const contentBox = document.getElementById('invitation-content');
         const errorBox = document.getElementById('error-message');
 
         if (inviteTarget && databaseVTuber[inviteTarget]) {
-            // Jika nama ditemukan di 'database'
             const data = databaseVTuber[inviteTarget];
             
-            // Ubah Title Tab Browser
             document.title = "Invitation - " + data.name;
 
-            // Masukkan data ke HTML
             document.getElementById('display-name').innerText = data.name;
             document.getElementById('display-date').innerText = data.date;
             document.getElementById('display-time').innerText = data.time;
             document.getElementById('display-qr-waiting').src = data.qrWaiting;
             document.getElementById('display-qr-form').src = data.qrForm;
 
-            // Tampilkan desain undangan
             contentBox.style.display = 'flex';
         } else {
-            // Jika tidak ada URL parameter atau nama tidak ada di 'database'
             errorBox.style.display = 'block';
         }
     </script>
