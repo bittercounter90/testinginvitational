@@ -124,40 +124,11 @@
     </div>
 
     <!-- SCRIPT JAVASCRIPT UNTUK DATABASE STATIS -->
-    <script>
-        // 1. INI ADALAH PENGGANTI DATABASE (Objek JavaScript)
-        // Tambahkan nama VTuber di sini
-        const databaseVTuber = {
-            "asep": {
-                name: "ASEP KNALPOT",
-                date: "Minggu, 19 April 2026",
-                time: "20:00 WIB (GMT+7)",
-                qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomAsep",
-                qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormAsep"
-            },
-            "piponly": {
-                name: "PIPONELY",
-                date: "Minggu, 19 April 2026",
-                time: "20:00 WIB (GMT+7)",
-                qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomPiponely",
-                qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormPiponely"
-            },
-            "budi": {
-                name: "BUDI GAMING",
-                date: "Senin, 20 April 2026",
-                time: "19:00 WIB (GMT+7)",
-                qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomBudi",
-                qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormBudi"
-            }, // <-- DIPERBAIKI: Cukup kurung kurawal satu saja ditambah koma
-            "rucus": { // <-- DIPERBAIKI: Pakai huruf kecil 'rucus'
-                name: "RucusLiveID",
-                date: "Senin, 20 April 2026",
-                time: "19:00 WIB (GMT+7)",
-                qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomBudi",
-                qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormBudi"
-            }
-        };
+   <!-- PANGGIL FILE DATABASE DI SINI -->
+    <script src="database.js"></script>
 
+    <!-- SCRIPT JAVASCRIPT UNTUK LOGIKA (Tidak diubah) -->
+    <script>
         // 2. MENGAMBIL PARAMETER DARI URL (contoh: ?invite=asep)
         const urlParams = new URLSearchParams(window.location.search);
         // Ubah huruf jadi kecil semua (lowercase) agar tidak case-sensitive
