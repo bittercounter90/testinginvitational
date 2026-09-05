@@ -33,7 +33,7 @@ const databaseVTuber = {
         name: "AKIYOHUSKY",
         date: "Senin, 20 April 2026",
         time: "19:00 WIB (GMT+7)",
-        qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomBudi",
-        qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormBu
+        qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomakiyo",
+        qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormakiyo"
     }
 };
