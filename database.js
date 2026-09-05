@@ -1,3 +1,5 @@
+// Isi dari file database.js
+
 const databaseVTuber = {
     "asep": {
         name: "ASEP KNALPOT",
@@ -27,5 +29,4 @@ const databaseVTuber = {
         qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomBudi",
         qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormBudi"
     }
-    // Jika mau nambah orang baru, CUKUP TAMBAH DI FILE INI SAJA!
 };
