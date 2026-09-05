@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTuber Invitation Card</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS TETAP SAMA SEPERTI SEBELUMNYA */
+        :root {
+            --primary-blue: #84D3FA;
+            --text-blue: #64B5F6;
+            --bg-white: #FFFFFF;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        body {
+            background-color: #dcf3ff;
+            background-image: url('assets/bg-pattern.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Menyembunyikan konten sebelum data diload */
+        #invitation-content {
+            display: none; 
+            width: 100%;
+            max-width: 480px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Pesan Error jika nama tidak ditemukan */
+        #error-message {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            box-shadow: var(--box-shadow);
+        }
+
+        .top-section { display: flex; flex-direction: column; align-items: center; }
+        .image-placeholder { width: 100%; aspect-ratio: 16 / 9; background-color: #D9D9D9; border-radius: 12px; box-shadow: var(--box-shadow); }
+        .vtuber-name-box { background-color: var(--bg-white); color: var(--text-blue); width: 90%; text-align: center; padding: 15px; border-radius: 15px; font-size: 2rem; font-weight: 700; text-transform: uppercase; box-shadow: var(--box-shadow); margin-top: -20px; z-index: 2; }
+        .bottom-section { background-color: var(--bg-white); border-radius: 20px; padding: 25px; box-shadow: var(--box-shadow); display: flex; flex-direction: column; gap: 15px; }
+        .info-row { display: flex; border-radius: 10px; overflow: hidden; border: 2px solid var(--primary-blue); }
+        .info-label { background-color: var(--primary-blue); color: var(--bg-white); width: 35%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; padding: 10px; }
+        .info-value { width: 65%; color: var(--text-blue); font-weight: 700; display: flex; align-items: center; padding: 10px 15px; font-size: 1.1rem; background-color: var(--bg-white); }
+        .qr-section { display: flex; justify-content: space-between; align-items: stretch; margin-top: 10px; }
+        .qr-card { display: flex; width: 42%; border: 2px solid var(--primary-blue); border-radius: 10px; overflow: hidden; }
+        .qr-label { background-color: var(--primary-blue); color: var(--bg-white); width: 40%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.75rem; font-weight: 700; padding: 5px; line-height: 1.2; }
+        .qr-image-wrapper { width: 60%; background-color: var(--bg-white); display: flex; align-items: center; justify-content: center; padding: 5px; }
+        .qr-image-wrapper img { width: 100%; height: auto; display: block; }
+        .ampersand { display: flex; align-items: center; justify-content: center; color: var(--primary-blue); font-size: 2.5rem; font-weight: 700; }
+
+        @media (max-width: 400px) {
+            .vtuber-name-box { font-size: 1.5rem; }
+            .info-label { font-size: 0.85rem; }
+            .info-value { font-size: 0.9rem; }
+            .qr-label { font-size: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container Error -->
+    <div id="error-message">Undangan tidak ditemukan!</div>
+
+    <!-- Container Utama -->
+    <div id="invitation-content" class="invitation-container">
+        
+        <div class="top-section">
+            <div class="image-placeholder"></div>
+            <div class="vtuber-name-box" id="display-name">NAMA</div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="info-row">
+                <div class="info-label">DATE</div>
+                <div class="info-value" id="display-date">Minggu, 19 April 2026</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">TIME</div>
+                <div class="info-value" id="display-time">20:00 WIB (GMT+7)</div>
+            </div>
+
+            <div class="qr-section">
+                <div class="qr-card">
+                    <div class="qr-label">WAITING<br>ROOM</div>
+                    <div class="qr-image-wrapper">
+                        <img id="display-qr-waiting" src="" alt="QR Waiting Room">
+                    </div>
+                </div>
+                <div class="ampersand">&</div>
+                <div class="qr-card">
+                    <div class="qr-label">GOOGLE<br>FORM</div>
+                    <div class="qr-image-wrapper">
+                        <img id="display-qr-form" src="" alt="QR Google Form">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SCRIPT JAVASCRIPT UNTUK DATABASE STATIS -->
+    <script>
+        // 1. INI ADALAH PENGGANTI DATABASE (Objek JavaScript)
+        // Tambahkan nama VTuber di sini
+        const databaseVTuber = {
+            "asep": {
+                name: "ASEP KNALPOT",
+                date: "Minggu, 19 April 2026",
+                time: "20:00 WIB (GMT+7)",
+                qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomAsep",
+                qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormAsep"
+            },
+            "piponly": {
+                name: "PIPONELY",
+                date: "Minggu, 19 April 2026",
+                time: "20:00 WIB (GMT+7)",
+                qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomPiponely",
+                qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormPiponely"
+            },
+            "budi": {
+                name: "BUDI GAMING",
+                date: "Senin, 20 April 2026",
+                time: "19:00 WIB (GMT+7)",
+                qrWaiting: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WaitingRoomBudi",
+                qrForm: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=GoogleFormBudi"
+            }
+        };
+
+        // 2. MENGAMBIL PARAMETER DARI URL (contoh: ?invite=asep)
+        const urlParams = new URLSearchParams(window.location.search);
+        // Ubah huruf jadi kecil semua (lowercase) agar tidak case-sensitive
+        const inviteTarget = urlParams.get('invite') ? urlParams.get('invite').toLowerCase() : null;
+
+        // 3. LOGIKA PENAMPILAN DATA
+        const contentBox = document.getElementById('invitation-content');
+        const errorBox = document.getElementById('error-message');
+
+        if (inviteTarget && databaseVTuber[inviteTarget]) {
+            // Jika nama ditemukan di 'database'
+            const data = databaseVTuber[inviteTarget];
+            
+            // Ubah Title Tab Browser
+            document.title = "Invitation - " + data.name;
+
+            // Masukkan data ke HTML
+            document.getElementById('display-name').innerText = data.name;
+            document.getElementById('display-date').innerText = data.date;
+            document.getElementById('display-time').innerText = data.time;
+            document.getElementById('display-qr-waiting').src = data.qrWaiting;
+            document.getElementById('display-qr-form').src = data.qrForm;
+
+            // Tampilkan desain undangan
+            contentBox.style.display = 'flex';
+        } else {
+            // Jika tidak ada URL parameter atau nama tidak ada di 'database'
+            errorBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
