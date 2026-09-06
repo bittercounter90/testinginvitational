@@ -251,7 +251,7 @@
             envelopeScreen.classList.add('fade-out');
 
             // 2. Tunggu sebentar sesuai durasi animasi CSS (0.5 detik)
-            setTimeout(() => {
+            setTimeout(() => { 
                 envelopeScreen.style.display = 'none'; // Sembunyikan amplop dari HTML
                 contentBox.classList.add('show');      // Munculkan kartu undangan
 
@@ -260,7 +260,7 @@
                 if (videoElement) {
                     videoElement.play().catch(err => console.log("Video autoplay dicegah:", err));
                 }
-            }, 500); 
+            }, 1000); 
         }
     </script>
 </body>
