@@ -35,35 +35,113 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            overflow-x: hidden;
         }
 
-        /* Menyembunyikan konten sebelum data diload */
+        /* =========================================
+           TAMBAHAN: SCREEN 1 (AMPLOP / COVER)
+           ========================================= */
+        #envelope-screen {
+            display: none; /* Akan diatur via JS */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.85); /* Efek kaca transparan */
+            backdrop-filter: blur(8px);
+            padding: 40px 30px;
+            border-radius: 25px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            animation: bounceIn 0.8s ease-in-out;
+            z-index: 10;
+        }
+
+        .envelope-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: floatAnim 2s ease-in-out infinite;
+        }
+
+        .envelope-title {
+            color: var(--text-blue);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .envelope-subtitle {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        .open-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.2s, background-color 0.2s;
+            text-transform: uppercase;
+        }
+
+        .open-btn:hover {
+            background-color: #64B5F6;
+            transform: scale(1.05);
+        }
+
+        /* Animasi Amplop Keluar */
+        #envelope-screen.fade-out {
+            opacity: 0;
+            transform: scale(1.1);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: none;
+        }
+
+        /* =========================================
+           UPDATE: SCREEN 2 (KARTU UNDANGAN UTAMA)
+           ========================================= */
         #invitation-content {
             display: none; 
             width: 100%;
             max-width: 480px;
             flex-direction: column;
             gap: 20px;
+            /* Tambahan efek muncul dari bawah */
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
-        /* Pesan Error jika nama tidak ditemukan */
-        #error-message {
-            display: none;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            color: red;
-            font-weight: bold;
-            box-shadow: var(--box-shadow);
+        /* Kelas pemicu animasi saat amplop dibuka */
+        #invitation-content.show {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
+        /* Keyframes untuk animasi ikon amplop */
+        @keyframes floatAnim {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* CSS BAWAAN ANDA */
+        #error-message { display: none; background: white; padding: 20px; border-radius: 10px; text-align: center; color: red; font-weight: bold; box-shadow: var(--box-shadow); }
         .top-section { display: flex; flex-direction: column; align-items: center; }
-        
-        /* CSS yang diupdate untuk Video */
         .image-placeholder { width: 100%; aspect-ratio: 16 / 9; background-color: #D9D9D9; border-radius: 12px; box-shadow: var(--box-shadow); overflow: hidden; display: flex; }
         .image-placeholder video { width: 100%; height: 100%; object-fit: cover; }
-        
         .vtuber-name-box { background-color: var(--bg-white); color: var(--text-blue); width: 90%; text-align: center; padding: 15px; border-radius: 15px; font-size: 2rem; font-weight: 700; text-transform: uppercase; box-shadow: var(--box-shadow); margin-top: -20px; z-index: 2; }
         .bottom-section { background-color: var(--bg-white); border-radius: 20px; padding: 25px; box-shadow: var(--box-shadow); display: flex; flex-direction: column; gap: 15px; }
         .info-row { display: flex; border-radius: 10px; overflow: hidden; border: 2px solid var(--primary-blue); }
@@ -89,12 +167,18 @@
     <!-- Container Error -->
     <div id="error-message">Undangan tidak ditemukan!</div>
 
-    <!-- Container Utama -->
+    <!-- LAYAR 1: AMPLOP AWAL -->
+    <div id="envelope-screen">
+        <div class="envelope-icon">💌</div>
+        <div class="envelope-title" id="envelope-receiver">Undangan Spesial</div>
+        <div class="envelope-subtitle">Ketuk tombol di bawah untuk membuka kartu undanganmu!</div>
+        <button class="open-btn" onclick="openEnvelope()">Buka Undangan</button>
+    </div>
+
+    <!-- LAYAR 2: KONTEN UNDANGAN -->
     <div id="invitation-content" class="invitation-container">
-        
         <div class="top-section">
             <div class="image-placeholder">
-                <!-- LINK VIDEO DIMASUKKAN DI SINI -->
                 <video id="display-video" controls autoplay muted loop>
                     <source src="assets/intro.mp4" type="video/mp4">
                     Browser Anda tidak mendukung pemutar video.
@@ -112,7 +196,6 @@
                 <div class="info-label">TIME</div>
                 <div class="info-value" id="display-time">20:00 WIB (GMT+7)</div>
             </div>
-
             <div class="qr-section">
                 <div class="qr-card">
                     <div class="qr-label">WAITING<br>ROOM</div>
@@ -129,34 +212,55 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- PANGGIL FILE DATABASE DI SINI -->
+    <!-- PANGGIL FILE DATABASE -->
     <script src="database.js"></script>
 
-    <!-- SCRIPT JAVASCRIPT UNTUK LOGIKA -->
+    <!-- SCRIPT LOGIKA & ANIMASI -->
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const inviteTarget = urlParams.get('invite') ? urlParams.get('invite').toLowerCase() : null;
 
+        const envelopeScreen = document.getElementById('envelope-screen');
         const contentBox = document.getElementById('invitation-content');
         const errorBox = document.getElementById('error-message');
 
+        // Cek data saat halaman pertama dimuat
         if (inviteTarget && databaseVTuber[inviteTarget]) {
             const data = databaseVTuber[inviteTarget];
             
+            // Masukkan data ke HTML
             document.title = "Invitation - " + data.name;
-
+            document.getElementById('envelope-receiver').innerText = "Untuk: " + data.name; // Nama di amplop
             document.getElementById('display-name').innerText = data.name;
             document.getElementById('display-date').innerText = data.date;
             document.getElementById('display-time').innerText = data.time;
             document.getElementById('display-qr-waiting').src = data.qrWaiting;
             document.getElementById('display-qr-form').src = data.qrForm;
 
-            contentBox.style.display = 'flex';
+            // Tampilkan Layar Amplop (Bukan langsung kartu)
+            envelopeScreen.style.display = 'flex';
         } else {
             errorBox.style.display = 'block';
+        }
+
+        // FUNGSI INTERAKTIF BUKA AMPLOP
+        function openEnvelope() {
+            // 1. Berikan kelas fade-out agar amplop memudar dan membesar sedikit
+            envelopeScreen.classList.add('fade-out');
+
+            // 2. Tunggu sebentar sesuai durasi animasi CSS (0.5 detik)
+            setTimeout(() => {
+                envelopeScreen.style.display = 'none'; // Sembunyikan amplop dari HTML
+                contentBox.classList.add('show');      // Munculkan kartu undangan
+
+                // 3. Paksa video intro untuk Play (membantu bypass kebijakan Autoplay browser)
+                const videoElement = document.getElementById('display-video');
+                if (videoElement) {
+                    videoElement.play().catch(err => console.log("Video autoplay dicegah:", err));
+                }
+            }, 500); 
         }
     </script>
 </body>
